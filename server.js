@@ -1,12 +1,13 @@
 //Packages for application
 const inquirer = require ('inquirer')
-const express = require('express')
-const mysql = require('mysql2')
+const prompt = require ('prompt');
+const express = require ('express')
+const mysql = require ('mysql2')
 const PORT = process.env.PORT || 3001;
 const app = express();
 
 const db = mysql.createConnection({
-    host: 'localhost',
+    host: "127.0.0.1",
     user: 'root',
     password: 'Backroadboy94!',
     database: 'staffing_db'
@@ -23,16 +24,22 @@ db.connect((err) => {
     });
 })
 
+
 function run(){
 inquirer
-prompt.start()
-prompt.get(['departmentName'], (err, result) => {
-  if (err) {
-    console.log('Database connection error', err);
-    return;
-  }
-  console.log('Connected to the database')
+.prompt(['departmentName'])
+.then((result) => {
+  const departmentName = result.departmentName;
+  console.log('Department Name:', departmentName);
+})
+.catch((error) => {
+  console.log('Error:', error);
+
 });
+
+}
+
+run();
 
 const departmentName = result.departmentName;
 
@@ -48,4 +55,3 @@ connection.query(sql, values, (err,results) => {
 console.log('Department added to database');
 connection.end();
 });
-}
