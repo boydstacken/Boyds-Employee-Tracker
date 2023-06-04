@@ -5,26 +5,34 @@ const mysql = require('mysql2')
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-const db = mysql.createConnection(
-  {
-    host: 'localhost'
-    user: 'root'
-    password: 'Backroadboy94!'
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'Backroadboy94!',
     database: 'staffing_db'
+});
+
+db.connect((err) => {
+  if (err) {
+    console.error('Error with connection to database: ', err);
+    return;
   }
-  console.log('Connected to the staffing_db database')
-);
+    console.log('Connected to staffing_db database');
+    app.listen(PORT, () => {
+      console.log('Server is running on port ${PORT}');
+    });
+})
 
 function run(){
 inquirer
-prompt.start():
-prompt.get(['departmentName']. (err,result)) => {
+prompt.start()
+prompt.get(['departmentName'], (err, result) => {
   if (err) {
     console.log('Database connection error', err);
     return;
   }
   console.log('Connected to the database')
-}
+});
 
 const departmentName = result.departmentName;
 
