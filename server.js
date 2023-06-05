@@ -58,13 +58,10 @@ function run() {
         return;
       }
     })
-    .catch((erro)=> {
-      console.log('Erro:', error);
+    .catch((error)=> {
+      console.log('Error:', error);
     });
 }
-
-//Starts application
-run();
 
 //Prompt to add department
 function addDepartment() {
@@ -77,28 +74,25 @@ function addDepartment() {
       const departmentName = result.departmentName;
       console.log("Department Name:", departmentName);
       const sql = "INSERT INTO departments (name) VALUES (?)";
-      const values = [departmentName];
 
       connection.query(sql, values, (err, results) => {
         console.log(results);
         if (err) {
           console.error(
-            "Error, could not insert department into staffing_db database",
-            err
-          );
+            "Error, could not insert department into staffing_db database",err);
           return;
         }
-
         console.log("Department added to database");
+        run();
         //connection.end();
       });
     })
     .catch((error) => {
       console.log("Error:", error);
     });
-//Prompt to add role
 }
 
+//Prompt to add role
 function addRole() {
   inquirer
     .prompt([{
@@ -117,6 +111,11 @@ function addRole() {
     .then((result) => {
       const roleName = result.roleName;
       console.log("Role Name:", roleName);
+      const roleSalary = result.roleSalary;
+      console.log("Role Salary:", roleSalary);
+      const roleDepartment = result.roleDepartment;
+      console.log("Role Department:", roleDepartment)
+
       const sql = "INSERT INTO roles (roleName, Salary, Department) VALUES (?, ?, ?)";
 
       connection.query(sql, values, (err, results) => {
@@ -214,6 +213,7 @@ function addEmployee() {
     
           console.log("Employee's updated role added to database");
             //connection.end();
+            run();
           });
         })
         .catch((error) => {
