@@ -8,7 +8,7 @@ USE staffing_db;
 
 -- Will create the "employees" table in the database we created --
 CREATE TABLE departments (
- id INT NOT NULL,
+ id INT NOT NULL AUTO_INCREMENT,
  name VARCHAR(30) NOT NULL,
  PRIMARY KEY (id)
 );
@@ -29,6 +29,6 @@ CREATE TABLE employees (
  last_name VARCHAR(30) NOT NULL,
  role_id INT NOT NULL,
  manager_id INT,
- FOREIGN KEY (role_id) REFERENCES roles(id),
+ FOREIGN KEY (roles_id) REFERENCES roles(id),
  FOREIGN KEY (manager_id) REFERENCES employees(id) ON DELETE SET NULL
 ); 

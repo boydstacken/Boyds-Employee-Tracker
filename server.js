@@ -4,6 +4,7 @@ const prompt = require("prompt");
 //const express = require ('express')
 const mysql = require("mysql2");
 const PORT = process.env.PORT || 3001;
+
 //const app = express();
 
 const db = mysql.createConnection({
@@ -54,7 +55,7 @@ function run() {
       } else if (action === 'Update an employee role') {
         updateEmployeeRole();
       } else if (action === 'Exit') {
-        connection.end();
+        db.end();
         return;
       }
     })
@@ -74,12 +75,13 @@ function addDepartment() {
       const departmentName = result.departmentName;
       console.log("Department Name:", departmentName);
       const sql = "INSERT INTO departments (name) VALUES (?)";
+      const values = [departmentName];
 
-      connection.query(sql, values, (err, results) => {
+      db.query(sql, values, (err, results) => {
         console.log(results);
         if (err) {
           console.error(
-            "Error, could not insert department into staffing_db database",err);
+            "Error, could not insert department into staffing_db database", err);
           return;
         }
         console.log("Department added to database");
@@ -117,8 +119,9 @@ function addRole() {
       console.log("Role Department:", roleDepartment)
 
       const sql = "INSERT INTO roles (roleName, Salary, Department) VALUES (?, ?, ?)";
+      const values = [roleName, roleSalary, roleDepartment];
 
-      connection.query(sql, values, (err, results) => {
+      db.query(sql, values, (err, results) => {
         console.log(results);
         if (err) {
           console.error(
@@ -165,7 +168,7 @@ function addEmployee() {
       //Inserting employee info entered from prompt into database
       const sql = "INSERT INTO employees (first_name, last_name, role, manager) VALUES (?,?,?,?)";
 
-      connection.query(sql,[employeeFirstName, employeeLastName, employeeRole, employeeManager], (err, results) => {
+      db.query(sql,[employeeFirstName, employeeLastName, employeeRole, employeeManager], (err, results) => {
         console.log(results);
         if (err) {
           console.error("Error, could not insert employee into staffing_db database", err);
@@ -200,8 +203,9 @@ function addEmployee() {
           //Update of employee's role in db
           const sql = "UPDATE employees SET role = ? WHERE id = ?";
           const values = [updateEmployeeRole];
+          const employeeToUpdate = result.employeeToUpdate;
     
-          connection.query(sql, [newRole, employeeToUpdate], (err, results) => {
+          db.query(sql, [newRole, employeeToUpdate], (err, results) => {
             console.log(results);
             if (err) {
               console.error(
