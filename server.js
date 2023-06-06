@@ -98,7 +98,7 @@ function addDepartment() {
 function addRole() {
   inquirer
     .prompt([{
-      name: 'roleName',
+      name: 'title',
       message: 'What is the name of the role?'
     },
     {
@@ -111,15 +111,15 @@ function addRole() {
     }
   ])
     .then((result) => {
-      const roleName = result.roleName;
-      console.log("Role Name:", roleName);
+      const title = result.title;
+      console.log("Role Name:", title);
       const roleSalary = result.roleSalary;
       console.log("Role Salary:", roleSalary);
       const roleDepartment = result.roleDepartment;
       console.log("Role Department:", roleDepartment)
 
-      const sql = "INSERT INTO roles (roleName, Salary, Department) VALUES (?, ?, ?)";
-      const values = [roleName, roleSalary, roleDepartment];
+      const sql = "INSERT INTO roles (title, Salary, Department) VALUES (?, ?, ?)";
+      const values = [title, roleSalary, roleDepartment];
 
       db.query(sql, values, (err, results) => {
         console.log(results);
