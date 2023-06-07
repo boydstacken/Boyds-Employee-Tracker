@@ -38,7 +38,6 @@ function run() {
         'Add a role',
         'Add an employee',
         'Update an employee role',
-        'Update an employee role',
         'Exit',
       ],
     },
@@ -96,7 +95,13 @@ function addDepartment() {
 
 //Prompt to add role
 function addRole() {
-  inquirer
+  db.query("select * from departments", (err, data) => {
+    console.log(data)
+    const departments = data.map(({ id, name }) => ({
+      name: name,
+      value: id
+    }));
+    inquirer
     .prompt([{
       name: 'title',
       message: 'What is the name of the role?'
@@ -108,6 +113,8 @@ function addRole() {
     {
       name: 'roleDepartment',
       message: 'Enter the department of the role',
+      type: "list",
+      choices: departments
     }
   ])
     .then((result) => {
@@ -118,7 +125,7 @@ function addRole() {
       const roleDepartment = result.roleDepartment;
       console.log("Role Department:", roleDepartment)
 
-      const sql = "INSERT INTO roles (title, Salary, Department) VALUES (?, ?, ?)";
+      const sql = "INSERT INTO roles (title, salary, departments_id) VALUES (?, ?, ?)";
       const values = [title, roleSalary, roleDepartment];
 
       db.query(sql, values, (err, results) => {
@@ -136,60 +143,87 @@ function addRole() {
     .catch((error) => {
       console.log("Error:", error);
     })
+  })
+  
 };
 function addEmployee() {
-  inquirer
-    .prompt([{
-      name: 'employeeFirstName',
-      message: 'What is the first name of the employee?'
-    },
-    {
-      name: 'employeeLastName',
-      message: 'What is the last name of the employee?'
-    },
-    {
-      name: 'employeeRole',
-      message: 'What is the employees role?'
-    },
-    {
-      name: 'employeeManager',
-      message: 'What is the employees manager?'
-    },])
-    .then((result) => {
-      const employeeFirstName = result.employeeFirstName;
-      console.log("Employee's First Name:", employeeFirstName);
-      const employeeLastName = result.employeeLastName;
-      console.log("Employee's Last Name:", employeeLastName);
-      const employeeRole = result.employeeRole;
-      console.log("Employee's Role:", employeeRole)
-      const employeeManager = ("Employee's Manager:", result.employeeManager)
-      console.log("Employee's Manager:", result.employeeManager)
-      
-      //Inserting employee info entered from prompt into database
-      const sql = "INSERT INTO employees (first_name, last_name, role, manager) VALUES (?,?,?,?)";
+  db.query("select * from roles", (err, data) => {
+    const roles = data.map(({ id, title }) => ({
+      name: title,
+      value: id
+    }));
+    db.query("select * from employees", (err, data) => {
+      const employees = data.map(({ id, first_name }) => ({
+        name: first_name,
+        value: id
+      }));
+      inquirer
+      .prompt([{
+        name: 'employeeFirstName',
+        message: 'What is the first name of the employee?'
+      },
+      {
+        name: 'employeeLastName',
+        message: 'What is the last name of the employee?'
+      },
+      {
+        name: 'employeeRole',
+        message: 'What is the employees role?',
+        type: "list",
+        choices: roles
+      },
+      {
+        name: 'employeeManager',
+        message: 'What is the employees manager?',
+        type: "list",
+        choices: employees
 
-      db.query(sql,[employeeFirstName, employeeLastName, employeeRole, employeeManager], (err, results) => {
-        console.log(results);
-        if (err) {
-          console.error("Error, could not insert employee into staffing_db database", err);
-          return;
-        }
-        console.log("Employee added to database");
-        //connection.end();
-        run();
-        }
-      );
+      },])
+      .then((result) => {
+        const employeeFirstName = result.employeeFirstName;
+        console.log("Employee's First Name:", employeeFirstName);
+        const employeeLastName = result.employeeLastName;
+        console.log("Employee's Last Name:", employeeLastName);
+        const employeeRole = result.employeeRole;
+        console.log("Employee's Role:", employeeRole)
+        const employeeManager = ("Employee's Manager:", result.employeeManager)
+        console.log("Employee's Manager:", result.employeeManager)
+        
+        //Inserting employee info entered from prompt into database
+        const sql = "INSERT INTO employees (first_name, last_name, roles_id, manager_id) VALUES (?,?,?,?)";
+  
+        db.query(sql,[employeeFirstName, employeeLastName, employeeRole, employeeManager], (err, results) => {
+          console.log(results);
+          if (err) {
+            console.error("Error, could not insert employee into staffing_db database", err);
+            return;
+          }
+          console.log("Employee added to database");
+          //connection.end();
+          run();
+          }
+        );
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      })
     })
-    .catch((error) => {
-      console.log("Error:", error);
-    })
+  });
+  
   };
     function updateEmployeeRole() {
+      db.query("select * from employees", (err, data) => {
+        const employees = data.map(({ id, first_name }) => ({
+          name: first_name,
+          value: id
+        }));
+      });
       inquirer
         .prompt([{
           name: 'updateEmployeeRole',
           message: 'Select Employee to have their role updated',
-        },
+          type: "list",
+          choices: employees        },
         {
           name: 'newRole',
           message: 'Enter the new role of the employee',
