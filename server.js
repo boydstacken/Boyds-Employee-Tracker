@@ -211,24 +211,25 @@ function addEmployee() {
   });
   
   };
+ 
+  let employees; // Declare employees variable outside the callback function
+
     function updateEmployeeRole() {
       db.query("select * from employees", (err, data) => {
-        const employees = data.map(({ id, first_name }) => ({
+         employees = data.map(({ id, first_name }) => ({
           name: first_name,
-          value: id
-        }));
-      });
-      inquirer
+          value: id,
+    }));
+        inquirer
         .prompt([{
           name: 'updateEmployeeRole',
           message: 'Select Employee to have their role updated',
           type: "list",
-          choices: employees        },
-        {
+          choices: employees
+      
           name: 'newRole',
           message: 'Enter the new role of the employee',
-        },
-      ])
+        },])
         .then((result) => {
           const updateEmployeeRole = result.updateEmployeeRole;
           console.log("Employee that will have updated role:", updateEmployeeRole);
@@ -257,5 +258,6 @@ function addEmployee() {
         .catch((error) => {
           console.log("Error:", error);
         });
-  }
+      });
+    }
 
