@@ -225,20 +225,20 @@ function addEmployee() {
           name: 'updateEmployeeRole',
           message: 'Select Employee to have their role updated',
           type: "list",
-          choices: employees
-      
+          choices: employees,
+        },{
           name: 'newRole',
           message: 'Enter the new role of the employee',
         },])
         .then((result) => {
           const updateEmployeeRole = result.updateEmployeeRole;
           console.log("Employee that will have updated role:", updateEmployeeRole);
-          const newRole = result.updateNewRole;
+          const newRole = result.newRole;
           
           //Update of employee's role in db
-          const sql = "UPDATE employees SET role = ? WHERE id = ?";
+          const sql = "UPDATE employees SET roles_id = ? WHERE id = ?";
           const values = [updateEmployeeRole];
-          const employeeToUpdate = result.employeeToUpdate;
+          const employeeToUpdate = result.updateEmployeeRole;
     
           db.query(sql, [newRole, employeeToUpdate], (err, results) => {
             console.log(results);
