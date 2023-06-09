@@ -23,7 +23,7 @@ db.connect((err) => {
   // app.listen(PORT, () => {
   //   console.log('Server is running on port ${PORT}');
   // });
-  run();
+  run(); 
 });
 
 //main prompt ques for user
@@ -231,7 +231,7 @@ function addRole() {
     })
     .catch((error) => {
       console.log("Error:", error);
-  })}
+  })})};
   //prompt to view all employees
   function viewEmployees() {
     const sql = `SELECT * from employees`;
@@ -270,9 +270,8 @@ function addRole() {
       })
       .catch((error) => {
         console.log("Error:", error);
-      });
-    });
-  };
+    })});
+    };
 
 function addEmployee() {
   db.query("select * from roles", (err, data) => {
