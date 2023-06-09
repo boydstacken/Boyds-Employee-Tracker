@@ -231,8 +231,8 @@ function addRole() {
     })
     .catch((error) => {
       console.log("Error:", error);
-  })
-  }),
+  })}
+  //prompt to view all employees
   function viewEmployees() {
     const sql = `SELECT * from employees`;
     db.query(sql, (err, rows) => {
@@ -272,8 +272,8 @@ function addRole() {
         console.log("Error:", error);
       });
     });
-  }
-};
+  };
+
 function addEmployee() {
   db.query("select * from roles", (err, data) => {
     const roles = data.map(({ id, title }) => ({
