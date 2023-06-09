@@ -34,8 +34,11 @@ function run() {
       type: 'list',
       message: 'What would you like to do?',
       choices: [
+        'View all departments',
         'Add a department',
+        'View all roles',
         'Add a role',
+        'View all employees',
         'Add an employee',
         'Update an employee role',
         'Exit',
@@ -45,10 +48,16 @@ function run() {
     .then((result) => {
       const action = result.action;
       
-      if (action === 'Add a department'){
+      if (action === 'View all departments'){
+        viewDepartments();
+      } else if (action === 'Add a department'){
         addDepartment();
+      } else if (action === 'View all roles'){
+          viewDepartments();
       } else if (action === 'Add a role'){
         addRole();
+      } else if (action === 'View all employees'){
+        viewEmplooyees();
       } else if (action === 'Add an employee'){
         addEmployee();
       } else if (action === 'Update an employee role') {
@@ -63,6 +72,34 @@ function run() {
     });
 }
 
+function viewDepartments() {
+  inquirer
+    .prompt([{
+      name: 'departmentName',
+      message: 'List of Departments',
+      type: "list",
+      choices: departments
+    },])
+    .then((result) => {
+      const departmentName = result.departmentName;
+      console.log("Department Name:", departmentName);
+      const values = [departmentName];
+      db.query("select * from departments", (err, data) => {
+        console.log(data)
+        if (err) {
+          console.error(
+            "Error, could not view department from staffing_db database", err);
+          return;
+        }
+        console.log("Department viewed from staffin_db database");
+        run();
+        //connection.end();
+      });
+    })
+    .catch((error) => {
+      console.log("Error:", error);
+    });
+}
 //Prompt to add department
 function addDepartment() {
   inquirer
