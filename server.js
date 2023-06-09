@@ -53,11 +53,11 @@ function run() {
       } else if (action === 'Add a department'){
         addDepartment();
       } else if (action === 'View all roles'){
-          viewDepartments();
+        viewRoles();
       } else if (action === 'Add a role'){
         addRole();
       } else if (action === 'View all employees'){
-        viewEmplooyees();
+        viewEmployees();
       } else if (action === 'Add an employee'){
         addEmployee();
       } else if (action === 'Update an employee role') {
@@ -73,13 +73,24 @@ function run() {
 }
 
 function viewDepartments() {
+  const sql = `SELECT * from departments`;
+  db.query(sql, (err, rows) => {
+    if(err) {
+      console.log(err);
+      return;
+    }
+  console.log(rows)
+  const departments = rows.map(({ id, name }) => ({
+    name: name,
+    value: id
+}));
   inquirer
     .prompt([{
       name: 'departmentName',
       message: 'List of Departments',
       type: "list",
       choices: departments
-    },])
+    }])
     .then((result) => {
       const departmentName = result.departmentName;
       console.log("Department Name:", departmentName);
@@ -99,6 +110,7 @@ function viewDepartments() {
     .catch((error) => {
       console.log("Error:", error);
     });
+  });
 }
 //Prompt to add department
 function addDepartment() {
@@ -129,7 +141,47 @@ function addDepartment() {
       console.log("Error:", error);
     });
 }
-
+//Prompt to view all roles
+function viewRoles() {
+  const sql = `SELECT * from roles`;
+  db.query(sql, (err, rows) => {
+    if(err) {
+      console.log(err);
+      return;
+    }
+  console.log(rows)
+  const title = rows.map(({ title, name }) => ({
+    name: name,
+    value: title
+}));
+  inquirer
+    .prompt([{
+      name: 'viewRoles',
+      message: 'All Roles',
+      type: "list",
+      choices: title
+    }])
+    .then((result) => {
+      const roles = result.viewRoles;
+      console.log("Roles:", title);
+      const values = [roles];
+      db.query("select * from roles", (err, data) => {
+        console.log(data)
+        if (err) {
+          console.error(
+            "Error, could not view roles from staffing_db database", err);
+          return;
+        }
+        console.log("Roles viewed from staffing_db database");
+        run();
+        //connection.end();
+      });
+    })
+    .catch((error) => {
+      console.log("Error:", error);
+    });
+  });
+}
 //Prompt to add role
 function addRole() {
   db.query("select * from departments", (err, data) => {
@@ -179,9 +231,48 @@ function addRole() {
     })
     .catch((error) => {
       console.log("Error:", error);
-    })
   })
-  
+  }),
+  function viewEmployees() {
+    const sql = `SELECT * from employees`;
+    db.query(sql, (err, rows) => {
+      if(err) {
+        console.log(err);
+        return;
+      }
+    console.log(rows)
+    const employees = rows.map(({ id, first_name }) => ({
+      name: first_name,
+      value: id
+  }));
+    inquirer
+      .prompt([{
+        name: 'viewEmployees',
+        message: 'All Employees',
+        type: "list",
+        choices: employees
+      }])
+      .then((result) => {
+        const employees = result.viewEmployees;
+        console.log("Employees:", title);
+        const values = [employees];
+        db.query("select * from roles", (err, data) => {
+          console.log(data)
+          if (err) {
+            console.error(
+              "Error, could not view employees from staffing_db database", err);
+            return;
+          }
+          console.log("Employees viewed from staffing_db database");
+          run();
+          //connection.end();
+        });
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
+    });
+  }
 };
 function addEmployee() {
   db.query("select * from roles", (err, data) => {
