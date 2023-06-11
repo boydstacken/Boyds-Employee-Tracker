@@ -126,7 +126,7 @@ function addDepartment() {
       const values = [departmentName];
 
       db.query(sql, values, (err, results) => {
-        console.log(results);
+        console.table(results);
         if (err) {
           console.error(
             "Error, could not insert department into staffing_db database", err);
@@ -149,7 +149,7 @@ function viewRoles() {
       console.log(err);
       return;
     }
-  console.log(rows)
+  console.table(rows)
   const title = rows.map(({ title, name }) => ({
     name: name,
     value: title
@@ -166,7 +166,7 @@ function viewRoles() {
       console.log("Roles:", title);
       const values = [roles];
       db.query("select * from roles", (err, data) => {
-        console.log(data)
+        console.table(data)
         if (err) {
           console.error(
             "Error, could not view roles from staffing_db database", err);
@@ -218,7 +218,7 @@ function addRole() {
       const values = [title, roleSalary, roleDepartment];
 
       db.query(sql, values, (err, results) => {
-        console.log(results);
+        console.log     (results);
         if (err) {
           console.error(
             "Error, could not insert role into staffing_db database",err);
@@ -240,7 +240,7 @@ function addRole() {
         console.log(err);
         return;
       }
-    console.log(rows)
+    console.table(rows)
     const employees = rows.map(({ id, first_name }) => ({
       name: first_name,
       value: id
@@ -257,7 +257,7 @@ function addRole() {
         console.log("Employees:", title);
         const values = [employees];
         db.query("select * from roles", (err, data) => {
-          console.log(data)
+          console.table(data)
           if (err) {
             console.error(
               "Error, could not view employees from staffing_db database", err);
@@ -320,7 +320,7 @@ function addEmployee() {
         const sql = "INSERT INTO employees (first_name, last_name, roles_id, manager_id) VALUES (?,?,?,?)";
   
         db.query(sql,[employeeFirstName, employeeLastName, employeeRole, employeeManager], (err, results) => {
-          console.log(results);
+          console.table(results);
           if (err) {
             console.error("Error, could not insert employee into staffing_db database", err);
             return;
@@ -343,7 +343,7 @@ function addEmployee() {
 
     function updateEmployeeRole() {
       db.query("select * from employees", (err, data) => {
-         employees = data.map(({ id, first_name }) => ({
+         employees = data.map(({ id, first_name}) => ({
           name: first_name,
           value: id,
     }));
@@ -358,7 +358,7 @@ function addEmployee() {
           message: 'Enter the new role of the employee',
         },])
         .then((result) => {
-          const updateEmployeeRole = result.updateEmployeeRole;
+          const updateEmployeeRole = result.pdatueEmployeeRole;
           console.log("Employee that will have updated role:", updateEmployeeRole);
           const newRole = result.newRole;
           
@@ -368,7 +368,7 @@ function addEmployee() {
           const employeeToUpdate = result.updateEmployeeRole;
     
           db.query(sql, [newRole, employeeToUpdate], (err, results) => {
-            console.log(results);
+            console.table(results);
             if (err) {
               console.error(
                 "Error, could not insert updated employee role into staffing_db database",

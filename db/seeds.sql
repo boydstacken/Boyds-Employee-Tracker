@@ -1,3 +1,4 @@
+
 INSERT INTO departments (id, name)
 VALUES (001, "Marketing"),
        (002, "Finance"),
